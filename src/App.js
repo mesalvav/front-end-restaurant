@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { BrowserRouter } from 'react-router-dom';
 
 import './App.css';
 
@@ -11,23 +11,14 @@ class App extends React.Component {
   
   render() {
     return (
+      <BrowserRouter>
       <div className="App">
         <Main />
       </div>
+      </BrowserRouter>
     );
   }
-  // render(){
-  //   return (
-  //     <div className="App">
-  //       <Navbar dark color="primary">
-  //         <div className="container">
-  //           <NavbarBrand href="/">Restaurant</NavbarBrand>
-  //         </div>
-  //       </Navbar>
-  //       <Menu dishes={this.state.dishes}/>
-  //     </div>
-  //   );
-  // }
+  
 }
 
 export default App;
