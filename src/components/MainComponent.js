@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import Menu from './MenuComponent';
-// import DishDetail from './DishdetailComponent';
+
 import Header from './HeaderComponent';
 import Footer from './FooterComponent';
 import Home from './HomeComponent';
@@ -28,7 +28,6 @@ class Main extends Component {
     };
   }
   
-
   onDishSelect(dishId) {
     this.setState({ selectedDish: dishId});
     console.log("==== was clicked. line 19 id ===> "  );
