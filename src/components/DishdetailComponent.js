@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, CardImg, CardText, CardBody, Button, Modal, ModalHeader,
   ModalBody, Form, FormGroup, Input, Label, 
-  CardTitle, Breadcrumb, BreadcrumbItem
+  CardTitle, Breadcrumb, BreadcrumbItem, ListGroupItem,ListGroup
  } from 'reactstrap';
 
 import { Link } from 'react-router-dom';
@@ -17,19 +17,19 @@ function RenderDish({dish}) {
     </Card>
   )
 }
-
+ 
 function RenderComments({comments}) {
 
 console.log("comments = => " + comments);
 
     return (comments.map((cx, ijk)=>{
-                          return <li key={ijk} >
+                          return <ListGroupItem key={ijk} >
                               <div>{cx.comment}</div>
                               <div>--->{cx.author.username} , 
                               <span>{new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit'}).format(new Date(Date.parse(cx.createdAt)))}</span>
                               </div>
 
-                          </li> }));
+                          </ListGroupItem> }));
 
 }
 
@@ -57,7 +57,7 @@ toggleModal = ()=> {
 
 handleSubmit = (event)=> {
   console.log('Current State is: ' + JSON.stringify(this.state));
-  alert('Current State is: ' + JSON.stringify(this.state));
+   alert('Current State is: ' + JSON.stringify(this.state));
   event.preventDefault();
 }
 
@@ -76,6 +76,7 @@ console.log(" values  " + event.target.value);
 }
 
   render(){
+    console.log("from dish detail render currentlyLoggedIn " + this.props.location)
     if(  this.props.dish != null ) 
     {
       return (
@@ -97,8 +98,13 @@ console.log(" values  " + event.target.value);
                   <RenderDish dish={this.props.dish} />
               </div>
               <div className="col-12 col-md-5 m-1">
+                  { this.props.currentlyLoggedIn &&
                   <Button outline onClick={this.toggleModal} type="submit" value="submit" color="primary">Leave a Comment</Button>
+                  }
+                  <ListGroup>
+
                   <RenderComments comments={this.props.dish.comments} />
+                  </ListGroup>
               </div>
           </div>
 
@@ -121,25 +127,25 @@ console.log(" values  " + event.target.value);
                                         <option>5</option>
                                         
                                     </Input>
-                  </FormGroup>
-                    <FormGroup>
-                        <Label htmlFor="name">Name</Label>
-                        <Input type="text" id="thename" name="thename"
-                         value={this.state.thename}
-                           onChange={this.handleInputChange} />
                     </FormGroup>
-                    <FormGroup >
-                        <Label htmlFor="message" >Comment</Label>
-                        
-                            <Input type="textarea" id="message" name="message"
-                                rows="12"
-                                value={this.state.message}
-                                onChange={this.handleInputChange}
-                                ></Input>
-                        
-                    </FormGroup>
-                    <Button type="submit" value="submit" color="primary">Submit</Button>
-                </Form>
+                      <FormGroup>
+                          <Label htmlFor="name">Name</Label>
+                          <Input type="text" id="thename" name="thename"
+                          value={this.state.thename}
+                            onChange={this.handleInputChange} />
+                      </FormGroup>
+                      <FormGroup >
+                          <Label htmlFor="message" >Comment</Label>
+                          
+                              <Input type="textarea" id="message" name="message"
+                                  rows="12"
+                                  value={this.state.message}
+                                  onChange={this.handleInputChange}
+                                  ></Input>
+                          
+                      </FormGroup>
+                      <Button type="submit" value="submit" color="primary">Submit</Button>
+                    </Form>
 
                 </ModalBody>
                 </Modal>
@@ -157,64 +163,3 @@ console.log(" values  " + event.target.value);
 
 
 export default DishDetail;
-
-// function RenderDish({dish}) {
-//   return(
-//     <Card>
-//       <CardImg top src={dish.image} alt={dish.name} />
-//       <CardBody>
-//         <CardTitle>{dish.name}</CardTitle>
-//         <CardText>{dish.description}</CardText>
-//       </CardBody>
-//     </Card>
-//   )
-// }
-
-// function RenderComments({comments}) {
-
-
-//     return (comments.map((cx, ijk)=>{
-//                           return <li key={ijk} >
-//                               <div>{cx.comment}</div>
-//                               <div>---{cx.author} , <span>{new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit'}).format(new Date(Date.parse(cx.date)))}</span></div>
-
-//                           </li> }));
-
-// }
-
-
-
-// const DishDetail = (props)=>{
-//   if(  props.dish != null ) 
-//   {
-//     return (
-
-//         <div className="container">
-//         <div className="row">
-//             <Breadcrumb>
-
-//                 <BreadcrumbItem><Link to="/menu">Menu</Link></BreadcrumbItem>
-//                 <BreadcrumbItem active>{props.dish.name}</BreadcrumbItem>
-//             </Breadcrumb>
-//             <div className="col-12">
-//                 <h3>{props.dish.name}</h3>
-//                 <hr />
-//             </div>                
-//         </div>
-//         <div className="row">
-//             <div className="col-12 col-md-5 m-1">
-//                 <RenderDish dish={props.dish} />
-//             </div>
-//             <div className="col-12 col-md-5 m-1">
-//                 <Button outline onClick={this.toggleModal} type="submit" value="submit" color="primary">Leave a Comment</Button>
-//                 <RenderComments comments={props.comments} />
-//             </div>
-//         </div>
-//         </div>
-    
-//   );
-
-//   } 
-//   else 
-//   {return (<div></div>);}
-// }

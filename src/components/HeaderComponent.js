@@ -30,8 +30,8 @@ class Header extends React.Component {
         this.service.login(this.username.value, this.password.value )
         .then(()=>{
             this.toggleModal();
-            alert("Username: " + this.username.value + " Password: " + this.password.value
-            + " Remember: " + this.remember.checked);
+            // alert("Username: " + this.username.value + " Password: " + this.password.value
+            // + " Remember: " + this.remember.checked);
             this.props.getCurrentlyLoggedInUser();
         })
         .catch(err=>console.log(err))
@@ -44,7 +44,7 @@ class Header extends React.Component {
         this.service.signup(this.username.value, this.password.value)
         .then((respond)=>{
             this.toggleModalSignup();
-            alert("from signup Username: " + this.username.value + " Password: " + this.password.value);
+            // alert("from signup Username: " + this.username.value + " Password: " + this.password.value);
             this.props.getCurrentlyLoggedInUser();
         })
         .catch(err=>console.log(err))
