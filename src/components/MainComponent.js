@@ -39,7 +39,9 @@ class Main extends Component {
   componentDidMount(){
     this.service.getAllDishes()
     .then((datum)=>{
-      console.log(datum);
+      console.log(datum[0].comments);
+      datum[0].comments.map(eachComment=>{ console.log(eachComment); return true;});
+
       this.setState({dishes: datum, readyAllDishes: true});
     })
     .catch(err=>{console.log("dish service call " + err)})
@@ -56,11 +58,14 @@ class Main extends Component {
           />
       );
     }
-
+ 
     const DishWithId = ({match}) => {
+      // <DishDetail dish={this.state.dishes.filter((dish) => dish._id === parseInt(match.params.dishId,10))[0]} 
+
       return(
-          <DishDetail dish={this.state.dishes.filter((dish) => dish.id === parseInt(match.params.dishId,10))[0]} 
-            comments={this.state.comments.filter((comment) => comment.dishId === parseInt(match.params.dishId,10))} />
+          <DishDetail dish={this.state.dishes.filter((dish) => dish._id === match.params.dishId)[0]} 
+            // comments={this.state.comments.filter((comment) => comment.dishId === parseInt(match.params.dishId,10))}
+             />
       );
     };
     

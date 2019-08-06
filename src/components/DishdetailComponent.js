@@ -20,11 +20,14 @@ function RenderDish({dish}) {
 
 function RenderComments({comments}) {
 
+console.log("comments = => " + comments);
 
     return (comments.map((cx, ijk)=>{
                           return <li key={ijk} >
                               <div>{cx.comment}</div>
-                              <div>--->{cx.author} , <span>{new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit'}).format(new Date(Date.parse(cx.date)))}</span></div>
+                              <div>--->{cx.author.username} , 
+                              <span>{new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit'}).format(new Date(Date.parse(cx.createdAt)))}</span>
+                              </div>
 
                           </li> }));
 
@@ -51,14 +54,6 @@ toggleModal = ()=> {
   });
 }
 
-// handleLogin = (event)=> {
-//   event.preventDefault();
-//   this.toggleModal();
-
-//   alert("name: " + this.name.value + " Comment: " + this.message.value
-//       + " rating: " + this.rating.value);
-
-// }
 
 handleSubmit = (event)=> {
   console.log('Current State is: ' + JSON.stringify(this.state));
@@ -77,7 +72,7 @@ handleInputChange = (event)=> {
     [name]: value
   });
 console.log(" values  " + event.target.value);
-  // this.setState({[event.target.name]: event.target.value})
+  
 }
 
   render(){
@@ -103,7 +98,7 @@ console.log(" values  " + event.target.value);
               </div>
               <div className="col-12 col-md-5 m-1">
                   <Button outline onClick={this.toggleModal} type="submit" value="submit" color="primary">Leave a Comment</Button>
-                  <RenderComments comments={this.props.comments} />
+                  <RenderComments comments={this.props.dish.comments} />
               </div>
           </div>
 
