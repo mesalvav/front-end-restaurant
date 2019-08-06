@@ -16,6 +16,7 @@ import { PROMOTIONS } from '../shared/promotions';
 import { LEADERS } from '../shared/leaders';
 
 import DishService from '../services/dishService';
+import AuthService from '../services/AuthService';
 
 class Main extends Component {
 
@@ -23,12 +24,14 @@ class Main extends Component {
     super(props);
     this.state = {
       readyAllDishes: false,
+      currentlyLoggedIn: null,
       dishes: DISHES,
       comments: COMMENTS,
       promotions: PROMOTIONS,
       leaders: LEADERS
     };
-    this.service = new DishService();
+    this.dishservice = new DishService();
+    this.authservice = new AuthService();
   }
   
   onDishSelect(dishId) {
@@ -37,14 +40,26 @@ class Main extends Component {
   }
 
   componentDidMount(){
-    this.service.getAllDishes()
+    this.dishservice.getAllDishes()
     .then((datum)=>{
-      console.log(datum[0].comments);
-      datum[0].comments.map(eachComment=>{ console.log(eachComment); return true;});
+      //console.log(datum[0].comments);
+      //datum[0].comments.map(eachComment=>{ console.log(eachComment); return true;});
 
       this.setState({dishes: datum, readyAllDishes: true});
     })
     .catch(err=>{console.log("dish service call " + err)})
+  }
+
+  getCurrentlyLoggedInUser = () =>{
+    this.authservice.currentUser()
+    .then((theUser)=>{
+      this.setState({currentlyLoggedIn: theUser})
+      console.log("getCurrentlyLoggedInUser=>  " + JSON.stringify(this.state.currentlyLoggedIn));
+    })
+    .catch((err)=>{
+      console.log("err getCurrentlyLoggedInUser  " + err)
+      this.setState({currentlyLoggedIn: null})
+    })
   }
 
   render() {
@@ -72,7 +87,12 @@ class Main extends Component {
     return (
       <div>
          
-        <Header/>
+        <Header 
+            getCurrentlyLoggedInUser={this.getCurrentlyLoggedInUser}
+            currentlyLoggedIn={this.state.currentlyLoggedIn}
+            serviceLogMeOut={this.authservice.logout}
+            />
+
         <Switch>
             <Route path='/home' component={HomePage} />
             <Route exact path='/menu' component={() => <Menu dishes={this.state.dishes} />} />

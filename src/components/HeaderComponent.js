@@ -5,6 +5,7 @@ import { Navbar, NavbarBrand, Nav, NavbarToggler, Collapse, NavItem, Jumbotron,
     Form, FormGroup, Input, Label } from 'reactstrap';
 
 import { NavLink } from 'react-router-dom';
+import AuthService from '../services/AuthService';
 
 class Header extends React.Component {
     constructor(props) {
@@ -12,26 +13,57 @@ class Header extends React.Component {
     
         this.state = {
             isNavOpen: false,
-            isModalOpen: false
+            isModalOpen: false,
+            isModalSignUpOpen: false,
         };
         
         this.toggleNav = this.toggleNav.bind(this);
         this.toggleModal = this.toggleModal.bind(this);
         this.handleLogin = this.handleLogin.bind(this);
+
+        this.service = new AuthService();
       }
 
       handleLogin(event) {
-        this.toggleModal();
-        alert("Username: " + this.username.value + " Password: " + this.password.value
+          event.preventDefault();
+        
+        this.service.login(this.username.value, this.password.value )
+        .then(()=>{
+            this.toggleModal();
+            alert("Username: " + this.username.value + " Password: " + this.password.value
             + " Remember: " + this.remember.checked);
-        event.preventDefault();
+            this.props.getCurrentlyLoggedInUser();
+        })
+        .catch(err=>console.log(err))
 
+          
     }
+
+    handleSignUp = (event)=> {
+        event.preventDefault();
+        this.service.signup(this.username.value, this.password.value)
+        .then((respond)=>{
+            this.toggleModalSignup();
+            alert("from signup Username: " + this.username.value + " Password: " + this.password.value);
+            this.props.getCurrentlyLoggedInUser();
+        })
+        .catch(err=>console.log(err))
+        //
+        
+    }
+
+    
 
       toggleModal() {
         this.setState({
           isModalOpen: !this.state.isModalOpen
         });
+      }
+      
+      toggleModalSignup = ()=>{
+        this.setState({
+            isModalSignUpOpen: !this.state.isModalSignUpOpen
+          });
       }
 
       toggleNav() {
@@ -39,6 +71,16 @@ class Header extends React.Component {
           isNavOpen: !this.state.isNavOpen
         });
       }
+
+      headerlogout = ()=>{
+          this.props.serviceLogMeOut()
+          .then((respond)=>{
+            console.log("header logout " + JSON.stringify(respond));
+            this.props.getCurrentlyLoggedInUser();
+          })
+          .catch(err=>{console.log(err)})
+      }
+
       render() {
         return(
             <div>
@@ -62,9 +104,15 @@ class Header extends React.Component {
                                 </NavItem>
                             </Nav>
                             <Nav className="ml-auto" navbar>
-                                <NavItem>
+                            {!this.props.currentlyLoggedIn && <NavItem>
+                                    <Button outline onClick={this.toggleModalSignup}><span className="fa fas fa-user-plus"></span> SignUp</Button>
+                                </NavItem> }
+                            {!this.props.currentlyLoggedIn && <NavItem className="ml-1">
                                     <Button outline onClick={this.toggleModal}><span className="fa fa-sign-in fa-lg"></span> Login</Button>
-                                </NavItem>
+                                </NavItem> }
+                                {this.props.currentlyLoggedIn && <NavItem className="ml-1">
+                                    <Button outline onClick={this.headerlogout}><span className="fa fa-sign-out"></span> LogOut</Button>
+                                </NavItem>}
                             </Nav>
                         </Collapse>
 
@@ -113,6 +161,30 @@ class Header extends React.Component {
 
                 </ModalBody>
                 </Modal>
+
+                {/* start modal signup */}
+                <Modal isOpen={this.state.isModalSignUpOpen} toggle={this.toggleModalSignup}>
+                <ModalHeader toggle={this.toggleModalSignup}>SIGN UP</ModalHeader>
+                <ModalBody>
+
+                <Form onSubmit={this.handleSignUp}>
+                    <FormGroup>
+                        <Label htmlFor="username">Username</Label>
+                        <Input type="text" id="username" name="username"
+                            innerRef={(input) => this.username = input} />
+                    </FormGroup>
+                    <FormGroup>
+                        <Label htmlFor="password">Password</Label>
+                        <Input type="password" id="password" name="password"
+                            innerRef={(input) => this.password = input}  />
+                    </FormGroup>
+                    
+                    <Button type="submit" value="submit" color="primary">Sign Up</Button>
+                </Form>
+
+                </ModalBody>
+                </Modal>
+
             </div>
         );
     }
