@@ -15,22 +15,34 @@ import { COMMENTS } from '../shared/comments';
 import { PROMOTIONS } from '../shared/promotions';
 import { LEADERS } from '../shared/leaders';
 
+import DishService from '../services/dishService';
 
 class Main extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
+      readyAllDishes: false,
       dishes: DISHES,
       comments: COMMENTS,
       promotions: PROMOTIONS,
       leaders: LEADERS
     };
+    this.service = new DishService();
   }
   
   onDishSelect(dishId) {
     this.setState({ selectedDish: dishId});
     console.log("==== was clicked. line 19 id ===> "  );
+  }
+
+  componentDidMount(){
+    this.service.getAllDishes()
+    .then((datum)=>{
+      console.log(datum);
+      this.setState({dishes: datum, readyAllDishes: true});
+    })
+    .catch(err=>{console.log("dish service call " + err)})
   }
 
   render() {
@@ -54,7 +66,7 @@ class Main extends Component {
     
     return (
       <div>
-        
+         
         <Header/>
         <Switch>
             <Route path='/home' component={HomePage} />

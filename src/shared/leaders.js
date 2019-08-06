@@ -28,7 +28,7 @@ export const LEADERS = [
   },
   {
     id: 3,
-    name: 'Alberto Somayya',
+    name: 'Mario Salva',
     image: '/assets/images/meagain.png',
     designation: 'Executive Chef',
     abbr: 'EC',

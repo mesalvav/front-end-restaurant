@@ -36,7 +36,10 @@ constructor(props){
   super(props)
 
   this.state = {
-    isModalOpen: false
+    isModalOpen: false,
+    thename: 'nombre',
+    rating: '1',
+    message: 'comment here'
 };
 
 }
@@ -48,13 +51,33 @@ toggleModal = ()=> {
   });
 }
 
-handleLogin = (event)=> {
+// handleLogin = (event)=> {
+//   event.preventDefault();
+//   this.toggleModal();
+
+//   alert("name: " + this.name.value + " Comment: " + this.message.value
+//       + " rating: " + this.rating.value);
+
+// }
+
+handleSubmit = (event)=> {
+  console.log('Current State is: ' + JSON.stringify(this.state));
+  alert('Current State is: ' + JSON.stringify(this.state));
   event.preventDefault();
-  this.toggleModal();
+}
 
-  alert("name: " + this.name.value + " Comment: " + this.message.value
-      + " rating: " );
+handleInputChange = (event)=> {
+  const target = event.target;
+  const value = target.type === 'checkbox' ? target.checked : target.value;
+  // const value =  target.value;
 
+  const name = target.name;
+
+  this.setState({
+    [name]: value
+  });
+console.log(" values  " + event.target.value);
+  // this.setState({[event.target.name]: event.target.value})
 }
 
   render(){
@@ -88,14 +111,15 @@ handleLogin = (event)=> {
                 <ModalHeader toggle={this.toggleModal}>Submit Comment</ModalHeader>
                 <ModalBody>
 
-                <Form onSubmit={this.handleLogin}>
+                <Form onSubmit={this.handleSubmit}>
                   <FormGroup>
                       <Label htmlFor="rating">Rating</Label>
                       
-                      <Input type="select" name="rating" id="rating" 
-                                           innerRef={(input) => this.rating = input}
+                      <Input  type="select" name="rating" id="rating" 
+                                           onChange={this.handleInputChange}
+                                           value={this.state.rating}
                                            >
-                                        <option>1</option>
+                                        <option >1</option>
                                         <option>2</option>
                                         <option>3</option>
                                         <option>4</option>
@@ -105,15 +129,17 @@ handleLogin = (event)=> {
                   </FormGroup>
                     <FormGroup>
                         <Label htmlFor="name">Name</Label>
-                        <Input type="text" id="name" name="name"
-                            innerRef={(input) => this.name = input} />
+                        <Input type="text" id="thename" name="thename"
+                         value={this.state.thename}
+                           onChange={this.handleInputChange} />
                     </FormGroup>
                     <FormGroup >
                         <Label htmlFor="message" >Comment</Label>
                         
                             <Input type="textarea" id="message" name="message"
                                 rows="12"
-                                innerRef={(input) => this.message = input}
+                                value={this.state.message}
+                                onChange={this.handleInputChange}
                                 ></Input>
                         
                     </FormGroup>
