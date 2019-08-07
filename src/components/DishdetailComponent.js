@@ -5,6 +5,7 @@ import { Card, CardImg, CardText, CardBody, Button, Modal, ModalHeader,
  } from 'reactstrap';
 
 import { Link } from 'react-router-dom';
+import CommentService from '../services/commentService';
 
 function RenderDish({dish}) {
   return(
@@ -25,7 +26,7 @@ console.log("comments = => " + comments);
     return (comments.map((cx, ijk)=>{
                           return <ListGroupItem key={ijk} >
                               <div>{cx.comment}</div>
-                              <div>--->{cx.author.username} , 
+                              <div>{cx.rating} of 5 --{cx.author.username} , 
                               <span>{new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit'}).format(new Date(Date.parse(cx.createdAt)))}</span>
                               </div>
 
@@ -45,6 +46,7 @@ constructor(props){
     message: 'comment here'
 };
 
+this.commentservice = new CommentService();
 }
 
 toggleModal = ()=> {
@@ -59,6 +61,19 @@ handleSubmit = (event)=> {
   console.log('Current State is: ' + JSON.stringify(this.state));
    alert('Current State is: ' + JSON.stringify(this.state));
   event.preventDefault();
+  this.commentservice
+  .addNewComment(this.state.rating, 
+                  this.state.message,
+                  this.props.currentlyLoggedInDetail._id,
+                  this.props.dish._id 
+                  )
+  .then((response)=>{
+    console.log(response);
+    this.props.getAllDishes();
+    this.toggleModal();
+
+  })
+  .catch(err=>{console.log(err);})
 }
 
 handleInputChange = (event)=> {
@@ -77,6 +92,8 @@ console.log(" values  " + event.target.value);
 
   render(){
     console.log("from dish detail render currentlyLoggedIn " + this.props.location)
+    console.log(this.props.currentlyLoggedInDetail)
+    
     if(  this.props.dish != null ) 
     {
       return (
@@ -89,7 +106,13 @@ console.log(" values  " + event.target.value);
                   <BreadcrumbItem active>{this.props.dish.name}</BreadcrumbItem>
               </Breadcrumb>
               <div className="col-12">
-                  <h3>{this.props.dish.name}</h3>
+              { this.props.currentlyLoggedInDetail && 
+              <h4>h4h4 { this.props.currentlyLoggedInDetail._id } : 
+                { JSON.stringify( this.props._id) } 
+              </h4>
+               
+              }
+              {/* <div>{JSON.stringify( this.props.dish.comments)}</div> */}
                   <hr />
               </div>                
           </div>
@@ -98,7 +121,7 @@ console.log(" values  " + event.target.value);
                   <RenderDish dish={this.props.dish} />
               </div>
               <div className="col-12 col-md-5 m-1">
-                  { this.props.currentlyLoggedIn &&
+                  { this.props.currentlyLoggedInDetail &&
                   <Button outline onClick={this.toggleModal} type="submit" value="submit" color="primary">Leave a Comment</Button>
                   }
                   <ListGroup>
@@ -128,12 +151,12 @@ console.log(" values  " + event.target.value);
                                         
                                     </Input>
                     </FormGroup>
-                      <FormGroup>
+                      {/* <FormGroup>
                           <Label htmlFor="name">Name</Label>
                           <Input type="text" id="thename" name="thename"
                           value={this.state.thename}
                             onChange={this.handleInputChange} />
-                      </FormGroup>
+                      </FormGroup> */}
                       <FormGroup >
                           <Label htmlFor="message" >Comment</Label>
                           

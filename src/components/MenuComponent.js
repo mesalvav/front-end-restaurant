@@ -43,7 +43,9 @@ const Menu = (props) => {
                 </div>                
             </div>
             <div className="row">
-                {menu}
+
+                {props.ready && menu}
+                {!props.ready  && <div>LOADING ....</div>}
             </div>
         </div>
     );
